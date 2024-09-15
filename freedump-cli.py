@@ -59,8 +59,6 @@ def main() -> int:
     if mr:
         local_mem.save(mr, arguments.output_directory)
 
-    #print(mr)
-
     return 0
 
 if __name__ == '__main__':

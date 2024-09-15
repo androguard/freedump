@@ -1,4 +1,4 @@
-// Got from https://github.com/DoranekoSystems/frida-ceserver and add some modification
+// Ripped from https://github.com/DoranekoSystems/frida-ceserver and added some modification for internal usage
 
 var process_vm_readv;
 var process_vm_writev;
