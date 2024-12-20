@@ -1,0 +1,46 @@
+[project]
+name = "freedump"
+readme = "README.md"
+license = { file = "LICENSE" }
+keywords = ["Android, Security, Frida, Memory Dump"]
+description = "A quick python library to write and read process of Android application."
+requires-python = ">=3.10"
+dynamic = ["version"]
+authors = [
+  {name = "Anthony Desnos", email = "anthony@42.bzh"},
+]
+
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Utilities",
+    "Topic :: Security",
+]
+dependencies = ["lz4>=4.3.3", "frida>=16.5.7", "hexdump>=3.3"]
+
+[project.scripts]
+freedump = "freedump.main:app"
+freedump_localmem = "freedump.localmem:app"
+freedump_remotemem = "freedump.remotemem:app"
+
+[build-system]
+requires = ["setuptools>=68", "setuptools_scm>=8.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["freedump", "freedump.*"]
+
+
+[tool.setuptools_scm]
+version_file = "freedump/__version__.py"
+
+
+[tool.black]
+line-length = 79
+skip-string-normalization = true

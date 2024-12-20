@@ -1,23 +1,10 @@
 import argparse
 import sys
 
-from loguru import logger
-
-from freedump import FridaSession
-from freedump.memory import frida as frida_mem
-from freedump.memory import local as local_mem
-
-class FreedumpFilter:
-    def __init__(self, level:str) -> None:
-        self.level = level
-
-    def __call__(self, record):
-        return record["level"].no >= logger.level(self.level).no
-
-def setLog(level: str):
-    logger.remove(0)
-    my_filter = FreedumpFilter(level)
-    logger.add(sys.stderr, filter=my_filter, level=level)
+from . import FridaSession
+from .memory import frida as frida_mem
+from .memory import local as local_mem
+from .helper.logging import LOGGER
 
 def initParser():
     parser = argparse.ArgumentParser(
@@ -45,12 +32,10 @@ def initParser():
 
 arguments = initParser()
 
-def main() -> int:
-    setLog('DEBUG' if arguments.verbose else 'INFO')
-
+def app():
     fs = FridaSession(arguments.ip, arguments.usb)
     if not fs.connect():
-        logger.error('seems not possible to connect')
+        LOGGER.error('seems not possible to connect')
         return -1
 
     fs.init_script(arguments.size, frida_mem.FridaMemoryAccess(arguments.frida_memory_access))
@@ -62,4 +47,4 @@ def main() -> int:
     return 0
 
 if __name__ == '__main__':
-    sys.exit(main())
+    app()

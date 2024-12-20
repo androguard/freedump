@@ -3,21 +3,7 @@ import argparse
 import sys
 import hexdump
 
-from loguru import logger
-
-from freedump import LocalSession
-
-class FreedumpFilter:
-    def __init__(self, level:str) -> None:
-        self.level = level
-
-    def __call__(self, record):
-        return record["level"].no >= logger.level(self.level).no
-
-def setLog(level: str):
-    logger.remove(0)
-    my_filter = FreedumpFilter(level)
-    logger.add(sys.stderr, filter=my_filter, level=level)
+from . import LocalSession
 
 def str_to_int(data: str) -> int:
     if data.startswith('0x'):
@@ -43,9 +29,7 @@ def initParser():
 
 arguments = initParser()
 
-def main() -> int:
-    setLog('DEBUG' if arguments.verbose else 'INFO')
-
+def app():
     ls = LocalSession(arguments.input)
 
     address = str_to_int(arguments.address)
@@ -58,4 +42,4 @@ def main() -> int:
     return 0
 
 if __name__ == '__main__':
-    sys.exit(main())
+    app()
