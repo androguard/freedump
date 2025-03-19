@@ -5,7 +5,7 @@ from enum import Enum
 import lz4.block
 from struct import unpack
 
-from loguru import logger
+from freedump.helper.logging import LOGGER
 
 from . import Memory, splitter
 
@@ -33,7 +33,7 @@ class FridaMemory(Memory):
             self.scripts += frida_memory_default + '\n'
         self.scripts += frida_export_memory_functions
 
-        logger.info('[FREEDUMP] version={} size={}'.format(self.version, self.max_size))
+        LOGGER.info('[FREEDUMP] version={} size={}'.format(self.version, self.max_size))
 
     def set_agent(self, agent: frida.core.ScriptExportsSync):
         self.agent = agent
@@ -44,12 +44,12 @@ class FridaMemory(Memory):
         data = b''
 
         for new_base, new_size in splitter(base, size, MAX_SIZE):
-            logger.debug(hex(new_base) + ' ' + hex(new_size))
+            LOGGER.debug(hex(new_base) + ' ' + hex(new_size))
             new_data = self.agent.read_memory(new_base, new_size)
 
             # seems a fail from frida side
             if isinstance(new_data, bool):
-                logger.error('Failed to read the memory %x:%x' % (new_base, new_size))
+                LOGGER.error('Failed to read the memory %x:%x' % (new_base, new_size))
                 return data
             else:
                 if self.version == FridaMemoryAccess.FRIDA_MEMORY_LZ4:

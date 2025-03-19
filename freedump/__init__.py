@@ -6,7 +6,7 @@ from collections.abc import Iterable
 import struct
 
 import frida
-from loguru import logger
+from freedump.helper.logging import LOGGER
 
 from freedump.memory import frida as frida_mem
 from freedump.memory import local as local_mem
@@ -46,7 +46,7 @@ class LocalSession(Session):
         self.lm = local_mem.LocalMemory(local_mem.load(input_file))
 
     def read_memory_at(self, base: int, size: int) -> bytes:
-        logger.debug('[FREEDUMP][LocalSession] read_memory_at {} {}'.format(hex(base), size))
+        LOGGER.debug('[FREEDUMP][LocalSession] read_memory_at {} {}'.format(hex(base), size))
         return self.lm.read(base, size)
 
     def enumerate_ranges(self, permissions:str = 'rw-') -> Iterable[MemoryRange]:

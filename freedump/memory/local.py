@@ -2,7 +2,7 @@ import os
 import json
 from datetime import datetime
 
-from loguru import logger
+from freedump.helper.logging import LOGGER
 
 from . import FileInfo, Memory, MemoryBlock, MemoryRange, MemoryDump
 
@@ -49,12 +49,12 @@ class LocalMemory(Memory):
         self._cache = []
 
     def read(self, base: int, size: int) -> bytes:
-        logger.debug("BASE 0x%x %x" % (base, size))
+        LOGGER.debug("BASE 0x%x %x" % (base, size))
 
         for mb in self.l_mb:
             if (base >= mb.range.base) and (base < (mb.range.base+mb.range.size)):
                 diff = base - mb.range.base
                 return mb.data.read(diff, size)
 
-        logger.error('Seems impossible to read memory at {}'.format(hex(base)))
+        LOGGER.error('Seems impossible to read memory at {}'.format(hex(base)))
         return b''

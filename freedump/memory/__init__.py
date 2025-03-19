@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 import dataclasses
 
-from loguru import logger
+from freedump.helper.logging import LOGGER
 
 @dataclasses.dataclass
 class FileInfo:
@@ -28,16 +28,16 @@ class MemoryDump:
         self.opened = False
 
         if not self.lazy:
-            logger.debug('Opening memory file dump {}'.format(self.filename))
+            LOGGER.debug('Opening memory file dump {}'.format(self.filename))
             self.opened = True
             with open(self.filename, 'rb') as f:
                 self.dump = f.read()
 
     def read(self, base:int, size:int) -> bytes:
-        logger.debug("BASE 0x%x %x" % (base, size))
+        LOGGER.debug("BASE 0x%x %x" % (base, size))
 
         if self.lazy and not self.opened:
-            logger.debug('Lazy opening memory file dump {}'.format(self.filename))
+            LOGGER.debug('Lazy opening memory file dump {}'.format(self.filename))
             self.opened = True
             with open(self.filename, 'rb') as f:
                 self.dump = f.read()
